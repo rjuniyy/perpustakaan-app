@@ -14,6 +14,8 @@ import {
   where,
   orderBy,
   onSnapshot,
+  startAt,
+  endAt,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../../Firebase/firebase-config";
@@ -22,6 +24,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import SearchBar from "react-native-dynamic-search-bar";
+import AutocompleteInput from "react-native-autocomplete-input";
 
 const Home = ({ navigation }) => {
   const [searchInput, setSearchInput] = useState();
@@ -33,6 +36,19 @@ const Home = ({ navigation }) => {
   }
   function navigateDipinjam() {
     navigation.navigate("bukuDipinjamList");
+  }
+
+  async function search() {
+    const q = query(
+      collection(db, "buku"),
+      orderBy("judul"),
+      startAt(searchInput),
+      endAt(searchInput + "\uf8ff")
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+    });
   }
 
   useEffect(() => {
@@ -77,7 +93,6 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     async function fetchDataPinjam() {
-      // const qColl = query(collectionGroup(db, "buku"), where("parentID", "=="));
       const q = query(
         collection(db, "buku"),
         where("status", "==", "Dipinjam")
@@ -116,16 +131,27 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={styles.Container}>
-      <SearchBar
+      {/* <SearchBar
         fontColor="#c6c6c6"
         iconColor="#c6c6c6"
         shadowColor="#282828"
         cancelIconColor="#c6c6c6"
         placeholder="Search here"
-        // onChangeText={(text) => this.filterList(text)}
-        onSearchPress={() => console.log("Search Icon is pressed")}
-        // onClearPress={() => this.filterList("")}
+        onChangeText={(text) => setSearchInput(text)}
+        onSearchPress={search}
+        onClearPress={() => setSearchInput("")}
         onPress={() => alert("onPress")}
+        textInputStyle={{ height: 35 }}
+        clearIconImageStyle={{ height: 20, width: 40 }}
+      /> */}
+      <AutocompleteInput
+        data={data}
+        value={search}
+        onChangeText={(text) => setSearchInput(text)}
+        flatListProps={{
+          keyExtractor: (_, idx) => idx,
+          renderItem: ({ item }) => <Text></Text>,
+        }}
       />
       <Text style={styles.txtKategori}>Buku-Buku Terbaru</Text>
       <TouchableOpacity style={styles.TouchLihat} onPress={navigateTerbaru}>
@@ -239,6 +265,7 @@ const styles = StyleSheet.create({
   Container: {
     height: hp("100%"),
     width: wp("100%"),
+    marginTop: 40,
   },
   txtKategori: {
     fontSize: 18,

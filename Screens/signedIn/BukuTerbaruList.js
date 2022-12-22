@@ -32,6 +32,7 @@ const BukuTerbaruList = ({ navigation }) => {
           const {
             judul,
             pengarang,
+            penerbit,
             status,
             gambar,
             deskripsi,
@@ -41,6 +42,7 @@ const BukuTerbaruList = ({ navigation }) => {
           } = doc.data();
           buku.push({
             id: doc.id,
+            penerbit,
             judul,
             pengarang,
             status,
