@@ -6,16 +6,11 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import FormError from "../Components/FormError";
 import FormSuccess from "../Components/FormSuccess";
-import { firebase } from "../Firebase/firebase";
-import {
-  getAuth,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const SignIn = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -48,16 +43,6 @@ const SignIn = ({ navigation }) => {
         console.log(err.errMessage);
         return setDisplayFormError(true);
       });
-    // firebase
-    //   .auth()
-    //   .signInWithEmailAndPassword(email, password)
-    //   .then(() => {
-    //     setIsLoading(false);
-    //   })
-    //   .catch((err) => {
-    //     setErrMessage(err.errMessage);
-    //     return setDisplayFormError(true);
-    //   });
   };
 
   return (

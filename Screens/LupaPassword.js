@@ -13,23 +13,11 @@ import FormSuccess from "../Components/FormSuccess";
 import { getAuth, updatePassword, sendPasswordResetEmail } from "firebase/auth";
 
 const LupaPassword = () => {
-  const [password, setPassword] = useState();
-  const [konPassword, setKonPassword] = useState();
   const [errMessage, setErrMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [displayFormError, setDisplayFormError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
-
-  // async function updatePasword() {
-  //   updatePassword(user, password)
-  //     .then(() => {
-  //       alert("Password berhasil di-ubah!");
-  //     })
-  //     .catch((error) => {
-  //       alert("Password gagal di-ubah!");
-  //     });
-  // }
 
   async function updatePassword() {
     const auth = getAuth();
@@ -44,45 +32,10 @@ const LupaPassword = () => {
       });
   }
 
-  // const validateForm = () => {
-  //   var form_inputs = [password, konPassword];
-
-  //   var password_match = password == konPassword;
-
-  //   // if (form_inputs.includes("") || form_inputs.includes(undefined)) {
-  //   //   setErrMessage("Daftar akun gagal, mohon isi semua baris");
-  //   //   return setDisplayFormError(true);
-  //   // }
-
-  //   if (!password_match) {
-  //     setErrMessage("Password tidak cocok");
-  //     return setDisplayFormError(true);
-  //   }
-
-  //   if (password_match) updatePassword();
-  // };
   return (
     <View style={styles.mainView}>
       <Image style={styles.ImageStyle} source={require("../assets/logo.png")} />
       <View style={styles.FormView}>
-        {/* <TextInput
-          mode="outlined"
-          activeOutlineColor="green"
-          activeUnderlineColor="red"
-          secureTextEntry={true}
-          label={"Password*"}
-          value={password}
-          onChangeText={(val) => setPassword(val)}
-        />
-        <TextInput
-          mode="outlined"
-          activeOutlineColor="green"
-          activeUnderlineColor="red"
-          secureTextEntry={true}
-          label={"Konfirmasi Password*"}
-          value={konPassword}
-          onChangeText={(val) => setKonPassword(val)}
-        /> */}
         <TextInput
           mode="outlined"
           activeOutlineColor="green"
