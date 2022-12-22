@@ -27,6 +27,15 @@ const BukuDipinjamUser = ({ navigation }) => {
   const [buku, setBuku] = useState([]);
   const userID = firebase.auth().currentUser.uid;
 
+  const EmptyListMessage = ({ item }) => {
+    return (
+      // Flat List Item
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyListStyle}>Belum ada buku yang dipinjam</Text>
+      </View>
+    );
+  };
+
   useEffect(() => {
     async function fetchData() {
       const q = query(
@@ -77,6 +86,7 @@ const BukuDipinjamUser = ({ navigation }) => {
       <View style={{ height: hp("100%"), flexDirection: "row" }}>
         <FlatList
           showsVerticalScrollIndicator={false}
+          ListEmptyComponent={EmptyListMessage}
           style={{ height: "100%", marginRight: 3 }}
           data={buku}
           keyExtractor={(item, index) => {
@@ -180,5 +190,11 @@ const styles = StyleSheet.create({
   itemstatus: {
     color: "grey",
     fontSize: 13,
+  },
+  emptyListStyle: {
+    padding: 10,
+    fontSize: 18,
+    textAlign: "center",
+    marginVertical: 350,
   },
 });

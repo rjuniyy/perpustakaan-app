@@ -30,6 +30,7 @@ const Home = ({ navigation }) => {
   const [searchInput, setSearchInput] = useState();
   const [buku, setBuku] = useState([]);
   const [bukuPinjam, setBukuDipinjam] = useState([]);
+  const [judul, setJudul] = useState([]);
 
   function navigateTerbaru() {
     navigation.navigate("bukuTerbaruList");
@@ -45,10 +46,14 @@ const Home = ({ navigation }) => {
       startAt(searchInput),
       endAt(searchInput + "\uf8ff")
     );
+    const bukuJudul = [];
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
+      const { judul } = doc.data();
+      bukuJudul.push({ judul });
+      console.log(judul);
     });
+    setJudul(bukuJudul);
   }
 
   useEffect(() => {
@@ -131,7 +136,7 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={styles.Container}>
-      {/* <SearchBar
+      <SearchBar
         fontColor="#c6c6c6"
         iconColor="#c6c6c6"
         shadowColor="#282828"
@@ -143,15 +148,6 @@ const Home = ({ navigation }) => {
         onPress={() => alert("onPress")}
         textInputStyle={{ height: 35 }}
         clearIconImageStyle={{ height: 20, width: 40 }}
-      /> */}
-      <AutocompleteInput
-        data={data}
-        value={search}
-        onChangeText={(text) => setSearchInput(text)}
-        flatListProps={{
-          keyExtractor: (_, idx) => idx,
-          renderItem: ({ item }) => <Text></Text>,
-        }}
       />
       <Text style={styles.txtKategori}>Buku-Buku Terbaru</Text>
       <TouchableOpacity style={styles.TouchLihat} onPress={navigateTerbaru}>
@@ -321,5 +317,13 @@ const styles = StyleSheet.create({
   imagePinjam: {
     width: "20%",
     height: 100,
+  },
+  autocompleteContainer: {
+    flex: 1,
+    left: 0,
+    position: "absolute",
+    right: 0,
+    top: 0,
+    zIndex: 1,
   },
 });
