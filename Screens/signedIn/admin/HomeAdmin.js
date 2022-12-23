@@ -8,6 +8,7 @@ import {
   startAt,
   endAt,
   getDocs,
+  where,
 } from "firebase/firestore";
 import {
   StyleSheet,
@@ -46,9 +47,33 @@ const HomeAdmin = ({ navigation }) => {
     const bukuJudul = [];
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      const { judul } = doc.data();
-      bukuJudul.push({ judul });
-      console.log(judul);
+      const {
+        judul,
+        pengarang,
+        status,
+        gambar,
+        penerbit,
+        detail,
+        halaman,
+        isbn,
+        tglTerbit,
+        stok,
+        deskripsi,
+      } = doc.data();
+      bukuJudul.push({
+        id: doc.id,
+        judul,
+        pengarang,
+        status,
+        gambar,
+        penerbit,
+        detail,
+        halaman,
+        isbn,
+        tglTerbit,
+        stok,
+        deskripsi,
+      });
     });
     setJudul(bukuJudul);
   }
@@ -113,11 +138,16 @@ const HomeAdmin = ({ navigation }) => {
           <FlatList
             data={judul}
             keyExtractor={(item) => {
-              return item.judul;
+              return item.id;
             }}
             renderItem={({ item }) => (
               <View style={{ justifyContent: "center" }}>
-                <TouchableOpacity style={styles.dropdownSearch}>
+                <TouchableOpacity
+                  style={styles.dropdownSearch}
+                  onPress={() =>
+                    navigation.navigate("detailBukuAdmin", { data: item })
+                  }
+                >
                   <Text>{item.judul}</Text>
                 </TouchableOpacity>
               </View>
@@ -217,5 +247,16 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: wp("90%"),
+  },
+  itemJudul: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  itempengarang: {
+    fontSize: 12,
+    color: "gray",
+  },
+  itemstatus: {
+    fontSize: 12,
   },
 });

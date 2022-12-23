@@ -8,15 +8,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { firebase } from "../../Firebase/firebase";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  limit,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../Firebase/firebase-config";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -33,8 +25,8 @@ const Profile = ({ navigation, route }) => {
 
   useEffect(() => {
     async function fetchUser() {
-      const email = firebase.auth().currentUser.email;
-      const q = query(collection(db, "users"), where("email", "==", email));
+      const uid = firebase.auth().currentUser.uid;
+      const q = query(collection(db, "users"), where("uid", "==", uid));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const user = [];
         querySnapshot.forEach((doc) => {
@@ -60,7 +52,7 @@ const Profile = ({ navigation, route }) => {
     <View style={styles.mainView}>
       <FlatList
         data={user}
-        keyExtractor={(item, index) => {
+        keyExtractor={(item) => {
           return item.id;
         }}
         renderItem={({ item }) => (

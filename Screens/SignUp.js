@@ -1,15 +1,12 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import moment from "moment";
 import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-// import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { TextInput } from "react-native-paper";
 import { firebase } from "../Firebase/firebase";
 import FormError from "../Components/FormError";
-import { FontAwesome5 } from "@expo/vector-icons";
 import FormSuccess from "../Components/FormSuccess";
 import { getAuth, sendEmailVerification } from "firebase/auth";
 import DateTimePickerAndroid from "@react-native-community/datetimepicker";
-import { TextInput } from "react-native-paper";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 function useInput() {
   const [date, setDate] = useState(new Date());
@@ -39,6 +36,8 @@ function useInput() {
 }
 
 const SignUp = () => {
+  const PLACEHOLDER_AVATAR =
+    "https://firebasestorage.googleapis.com/v0/b/perpus-ea96f.appspot.com/o/avatar%2Fuser.png?alt=media&token=7a8d3cbf-a6a4-4c2b-a704-ecb673642ee1";
   const [namaLengkap, setNamaLengkap] = useState("");
   const [email, setEmail] = useState("");
   const [tglLahir, setTglLahir] = useState();
@@ -47,9 +46,10 @@ const SignUp = () => {
   const [konPassword, setKonPassword] = useState();
   const [displayFormError, setDisplayFormError] = useState(false);
   const input = useInput(new Date());
+  const avatar = PLACEHOLDER_AVATAR;
 
   const [errMessage, setErrMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   function createUser() {
@@ -58,7 +58,7 @@ const SignUp = () => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        setIsLoading(false);
+        setIsLoading(true);
         setSuccessMessage("Akun berhasil dibuat, silahkan login");
       })
       .catch((err) => {
@@ -75,13 +75,17 @@ const SignUp = () => {
             email,
             namaLengkap,
             kelas,
+            uid: firebase.auth().currentUser.uid,
             tglLahir: moment(input.date).format("DD-MMMM-YYYY"),
+            avatarUrl: avatar,
+            noAnggota: "00000",
           });
       })
       .then(() => {
         const auth = getAuth();
         sendEmailVerification(auth.currentUser).then(() => {
-          alert("Email verified has been sent");
+          setIsLoading(false);
+          setSuccessMessage("Email telah dikirim!");
         });
       });
   }
@@ -95,13 +99,13 @@ const SignUp = () => {
       password,
       konPassword,
     ];
+    console.log(form_inputs);
+    if (form_inputs.includes("")) {
+      setErrMessage("Daftar gagal, mohon isi semua baris");
+      return setDisplayFormError(true);
+    }
 
     var password_match = password == konPassword;
-
-    // if (form_inputs.includes("") || form_inputs.includes(undefined)) {
-    //   setErrMessage("Daftar akun gagal, mohon isi semua baris");
-    //   return setDisplayFormError(true);
-    // }
 
     if (!password_match) {
       setErrMessage("Password tidak cocok");
@@ -110,69 +114,6 @@ const SignUp = () => {
 
     if (password_match) createUser();
   };
-
-  //DateTimePicker
-  // const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  // const showDatePicker = () => {
-  //   setDatePickerVisibility(true);
-  // };
-  // const hideDatePicker = () => {
-  //   setDatePickerVisibility(false);
-  // };
-  // const handleConfirm = (date) => {
-  //   // console.warn("A date has been picked: ", date);
-  //   setDate(date);
-  //   const tgl = moment(date).format("DD-MM-YYYY");
-  //   setTglLahir(tgl);
-  //   hideDatePicker();
-  // };
-
-  // const getDate = () => {
-  //   let tempDate = date.toString().split(" ");
-  //   return date !== ""
-  //     ? `${tempDate[0]} ${tempDate[1]} ${tempDate[2]} ${tempDate[3]}`
-  //     : "";
-  // };
-
-  //   registerUser = async (email, password, fullName, kelas, tglLahir) => {
-  //     await firebase
-  //       .auth()
-  //       .createUserWithEmailAndPassword(email, password)
-  //       .then(() => {
-  //         firebase
-  //           .auth()
-  //           .currentUser.sendEmailVerification({
-  //             handleCodeInApp: true,
-  //             url: "https://perpus-ea96f.firebaseapp.com",
-  //           })
-  //           .then(() => {
-  //             alert("Please activate your e-mail");
-  //             const user = userCredential.user;
-  //             console.log(user);
-  //           })
-  //           .catch((error) => {
-  //             alert(error.message);
-  //           })
-  //           .then(() => {
-  //             firebase
-  //               .firestore()
-  //               .collection("users")
-  //               .doc(firebase.auth().currentUser.uid)
-  //               .set({
-  //                 email,
-  //                 fullName,
-  //                 kelas,
-  //                 tglLahir,
-  //               });
-  //           })
-  //           .catch((error) => {
-  //             alert(error.message);
-  //           });
-  //       })
-  //       .catch((error) => {
-  //         alert(error.message);
-  //       });
-  //   };
 
   return (
     <View style={styles.mainView}>
@@ -240,83 +181,17 @@ const SignUp = () => {
           onChangeText={(val) => setKonPassword(val)}
         />
       </View>
-      {/* <View style={styles.FormView}>
-        <TextInput
-          mode="outlined"
-          label="Nama Lengkap"
-          activeOutlineColor="green"
-          onChangeText={(val) => setFullName(val)}
-        />
-      </View>
-      <TouchableOpacity onPress={input.showDatepicker} style={styles.FormView}>
-        <TextInput
-          style={styles.TextInput}
-          editable={false}
-          placeholderText="Tanggal Lahir"
-          value={input.date.toLocaleDateString()}
-        />
-        <View>
-          <FontAwesome5
-            name="calendar-alt"
-            size={24}
-            color="black"
-            style={{ marginRight: 20 }}
-          /> */}
 
-      {/* </View>
-      </TouchableOpacity>
-      <View style={styles.FormView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Kelas*"
-          onChangeText={(val) => setKelas(val)}
-          value={kelas}
-        />
-      </View>
-      <View style={styles.FormView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="E-mail*"
-          keyboardType="email-address"
-          onChangeText={(val) => setEmail(val)}
-          value={email}
-        />
-      </View>
-      <View style={styles.FormView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Password*"
-          secureTextEntry={true}
-          value={password}
-          onChangeText={(password) => setPassword(password)}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-      </View>
-      <View style={styles.FormView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Confirm Password*"
-          secureTextEntry={true}
-          value={confirmPassword}
-          onChangeText={(confirmPassword) =>
-            setConfirmPassword(confirmPassword)
-          }
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-      </View> */}
       <TouchableOpacity style={styles.Button} onPress={validateForm}>
         <Text style={styles.btnText}>Daftar</Text>
       </TouchableOpacity>
-
       {displayFormError == true ? (
         <FormError hideErrOverlay={setDisplayFormError} err={errMessage} />
       ) : null}
 
       {isLoading == true ? (
         <FormSuccess />
-      ) : successMessage == "Akun berhasil dibuat, silahkan login" ? (
+      ) : successMessage == "Email telah dikirim!" ? (
         <FormSuccess
           successMessage={successMessage}
           close={setSuccessMessage}

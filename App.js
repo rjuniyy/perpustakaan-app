@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -37,7 +36,6 @@ const App = () => {
   const Tab = createMaterialBottomTabNavigator();
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [user, setUser] = useState([]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -53,7 +51,6 @@ const App = () => {
       } else {
         setIsSignedIn(false);
       }
-      console.log(user);
     });
   }, []);
 
@@ -63,7 +60,7 @@ const App = () => {
         initialRouteName="home"
         activeColor="black"
         inactiveColor="white"
-        barStyle={{ backgroundColor: "#1AC000" }}
+        barStyle={{ backgroundColor: "#009800" }}
       >
         {isAdmin == false ? (
           <>
@@ -300,8 +297,8 @@ const App = () => {
             component={EditProfile}
             options={{
               headerTransparent: true,
-              headerTitle: "",
-              headerShown: false,
+              headerTitle: "Ubah Profil",
+              headerShown: true,
             }}
           />
         </Stack.Navigator>

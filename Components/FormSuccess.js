@@ -8,7 +8,7 @@ const FormSuccess = (props) => {
     <Overlay
       overlayStyle={styles.Overlay}
       isVisible={true}
-      onBackdropPress={() => props.close()}
+      onBackdropPress={() => props.close("")}
     >
       <FontAwesome5 name="check-circle" size={72} color="green" />
       <Text style={styles.Text}>{props.successMessage}</Text>

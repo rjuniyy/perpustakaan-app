@@ -15,10 +15,6 @@ import { FontAwesome5 } from "@expo/vector-icons";
 const ProfileAdmin = ({ navigation, route }) => {
   const [user, setUser] = useState([]);
 
-  function navigate() {
-    navigation.navigate("kartuDigital");
-  }
-
   const signOut = () => {
     firebase.auth().signOut();
   };

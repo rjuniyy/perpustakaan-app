@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Button,
+} from "react-native";
 import React, { useState } from "react";
 import { getAuth, updateEmail, updateProfile } from "firebase/auth";
 import uuid from "uuid";
@@ -18,6 +25,8 @@ import {
 import { firebase } from "../../Firebase/firebase";
 import moment from "moment";
 import DateTimePickerAndroid from "@react-native-community/datetimepicker";
+import { Divider } from "@rneui/themed";
+import Dialog from "react-native-dialog";
 
 function useInput() {
   const [date, setDate] = useState(new Date());
@@ -47,8 +56,6 @@ function useInput() {
 }
 
 const EditProfile = ({ navigation, route }) => {
-  const PLACEHOLDER_IMG =
-    "https://firebasestorage.googleapis.com/v0/b/perpus-ea96f.appspot.com/o/imageCover%2F27002.jpg?alt=media&token=8e70ce4a-6a79-4587-804a-b7819a01bfbc";
   const [data, setData] = useState(route.params.data);
   const [nama, setNama] = useState(data.namaLengkap);
   const [avatar, setAvatar] = useState(data.avatarUrl);
@@ -57,6 +64,20 @@ const EditProfile = ({ navigation, route }) => {
   const [email, setEmail] = useState(data.email);
   const [uploading, setUploading] = useState(false);
   const input = useInput(new Date());
+  const [visible, setVisible] = useState(false);
+
+  const showDialog = () => {
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+  const handleDelete = () => {
+    // The user has pressed the "Delete" button, so here you can do your own logic.
+    // ...Your logic
+    setVisible(false);
+  };
 
   function update() {
     const auth = getAuth();
@@ -68,7 +89,7 @@ const EditProfile = ({ navigation, route }) => {
         const auth = getAuth();
         updateEmail(auth.currentUser, email)
           .then(() => {
-            alert("Email berhasil di update");
+            showDialog();
           })
           .catch((error) => {
             alert("Email gagal di update :(");
@@ -85,7 +106,7 @@ const EditProfile = ({ navigation, route }) => {
             email: email,
             tglLahir: moment(input.date).format("DD-MMMM-YYYY"),
           });
-        alert("Data berhasil di ubah.");
+        // alert("Data berhasil di ubah.");
         navigation.navigate("Home");
       })
       .catch((error) => {
@@ -153,58 +174,87 @@ const EditProfile = ({ navigation, route }) => {
 
     return await getDownloadURL(fileRef);
   }
+
   return (
     <View style={styles.mainView}>
+      {visible && (
+        <View style={styles.container}>
+          <Dialog.Container visible={visible} onBackdropPress={handleCancel}>
+            <Dialog.Title>Account delete</Dialog.Title>
+            <Dialog.Description>Apakah anda yakin?</Dialog.Description>
+          </Dialog.Container>
+        </View>
+      )}
+
       <View style={styles.formContainer}>
         <View style={styles.avatarView}>
           <TouchableOpacity onPress={_pickImage}>
-            <Image
-              style={styles.avatar}
-              source={{ uri: avatar ? avatar : PLACEHOLDER_IMG }}
-            ></Image>
+            <Image style={styles.avatar} source={{ uri: avatar }}></Image>
           </TouchableOpacity>
         </View>
-        <TextInput style={styles.hideInput} value={avatar} />
-        <TextInput
-          mode="outlined"
-          label={"Nama Lengkap"}
-          activeOutlineColor="green"
-          onChangeText={(val) => setNama(val)}
-          defaultValue={nama}
-        />
-        <TextInput
-          mode="outlined"
-          label="E-mail"
-          activeOutlineColor="green"
-          onChangeText={(val) => setEmail(val)}
-          defaultValue={email}
-        />
-        <TextInput
-          mode="outlined"
-          label="Kelas"
-          activeOutlineColor="green"
-          onChangeText={(val) => setKelas(val)}
-          defaultValue={kelas}
-        />
-        <TouchableOpacity onPress={input.showDatepicker}>
+        <View style={{ alignItems: "center" }}>
+          <Divider
+            style={{ width: "90%", marginVertical: 15 }}
+            color="#808080"
+            width={1.5}
+            orientation="horizontal"
+            inset
+            insetType="middle"
+          />
+        </View>
+        <View style={{ width: "80%", alignSelf: "center" }}>
+          <TextInput style={styles.hideInput} value={avatar} />
           <TextInput
             mode="outlined"
-            label={"Tanggal Lahir*"}
-            editable={false}
-            value={moment(input.date).format("DD-MMMM-YYYY")}
+            label={"Nama Lengkap"}
+            activeOutlineColor="green"
+            onChangeText={(val) => setNama(val)}
+            defaultValue={nama}
           />
-          {input.show && (
-            <DateTimePickerAndroid
-              testID="dateTimePicker"
-              value={input.date}
-              mode={input.mode}
-              is24Hour={true}
-              display="default"
-              onChange={input.onChange}
+          <TextInput
+            mode="outlined"
+            label="E-mail"
+            activeOutlineColor="green"
+            onChangeText={(val) => setEmail(val)}
+            defaultValue={email}
+          />
+          <TextInput
+            mode="outlined"
+            label="Kelas"
+            activeOutlineColor="green"
+            onChangeText={(val) => setKelas(val)}
+            defaultValue={kelas}
+          />
+          <TouchableOpacity onPress={input.showDatepicker}>
+            <TextInput
+              mode="outlined"
+              label={"Tanggal Lahir*"}
+              editable={false}
+              value={moment(input.date).format("DD-MMMM-YYYY")}
             />
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={update}>
+            {input.show && (
+              <DateTimePickerAndroid
+                testID="dateTimePicker"
+                value={input.date}
+                mode={input.mode}
+                is24Hour={true}
+                display="default"
+                onChange={input.onChange}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <Divider
+            style={{ width: "90%", marginVertical: 20 }}
+            color="#808080"
+            width={1.5}
+            orientation="horizontal"
+            inset
+            insetType="middle"
+          />
+        </View>
+        <TouchableOpacity style={styles.button} onPress={showDialog}>
           <Text style={styles.buttonText}>Simpan Perubahan</Text>
         </TouchableOpacity>
       </View>
@@ -225,7 +275,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignSelf: "center",
-    width: "80%",
+    width: "100%",
   },
   textInput: {
     height: 40,
@@ -236,6 +286,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   hideInput: {
+    flex: 1,
     width: 0,
     height: 0,
   },
@@ -256,6 +307,8 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   button: {
+    alignSelf: "center",
+    width: "90%",
     backgroundColor: "green",
     alignItems: "center",
     paddingVertical: 13,
@@ -288,5 +341,11 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 150 / 2,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

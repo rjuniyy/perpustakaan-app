@@ -28,7 +28,7 @@ import Confirm from "../../../Components/Confirm";
 
 const DetailBukuAdmin = ({ navigation, route }) => {
   // *Declare variabel
-  const [bukuData, setBukuData] = useState(route.params.data);
+  const [bukuData, setBukuData] = useState(route?.params?.data || {});
   const [uploading, setUploading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 

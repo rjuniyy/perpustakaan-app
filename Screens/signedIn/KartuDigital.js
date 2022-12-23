@@ -27,8 +27,8 @@ const KartuDigital = () => {
 
   useEffect(() => {
     async function getUser() {
-      const email = firebase.auth().currentUser.email;
-      const q = query(collection(db, "users"), where("email", "==", email));
+      const uid = firebase.auth().currentUser.uid;
+      const q = query(collection(db, "users"), where("uid", "==", uid));
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const user = [];
         querySnapshot.forEach((doc) => {
