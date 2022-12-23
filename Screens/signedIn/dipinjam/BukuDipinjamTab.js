@@ -192,7 +192,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   emptyListStyle: {
-    padding: 10,
     fontSize: 18,
     textAlign: "center",
     marginVertical: 350,

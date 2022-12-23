@@ -27,10 +27,11 @@ import SearchBar from "react-native-dynamic-search-bar";
 import AutocompleteInput from "react-native-autocomplete-input";
 
 const Home = ({ navigation }) => {
-  const [searchInput, setSearchInput] = useState();
   const [buku, setBuku] = useState([]);
-  const [bukuPinjam, setBukuDipinjam] = useState([]);
   const [judul, setJudul] = useState([]);
+  const [searchInput, setSearchInput] = useState();
+  const [searching, setSearching] = useState(false);
+  const [bukuPinjam, setBukuDipinjam] = useState([]);
 
   function navigateTerbaru() {
     navigation.navigate("bukuTerbaruList");
@@ -38,8 +39,13 @@ const Home = ({ navigation }) => {
   function navigateDipinjam() {
     navigation.navigate("bukuDipinjamList");
   }
+  function onClearPress() {
+    setSearchInput("");
+    setSearching(false);
+  }
 
-  async function search() {
+  async function onSearch() {
+    setSearching(true);
     const q = query(
       collection(db, "buku"),
       orderBy("judul"),
@@ -141,18 +147,37 @@ const Home = ({ navigation }) => {
         iconColor="#c6c6c6"
         shadowColor="#282828"
         cancelIconColor="#c6c6c6"
-        placeholder="Search here"
+        placeholder="Cari judul buku disini..."
         onChangeText={(text) => setSearchInput(text)}
-        onSearchPress={search}
-        onClearPress={() => setSearchInput("")}
-        onPress={() => alert("onPress")}
+        onSearchPress={onSearch}
+        onClearPress={onClearPress}
         textInputStyle={{ height: 35 }}
         clearIconImageStyle={{ height: 20, width: 40 }}
+        onSubmitEditing={onSearch}
       />
-      <Text style={styles.txtKategori}>Buku-Buku Terbaru</Text>
-      <TouchableOpacity style={styles.TouchLihat} onPress={navigateTerbaru}>
-        <Text style={{ color: "blue" }}>Lihat semua</Text>
-      </TouchableOpacity>
+      {searching && (
+        <View style={{ alignItems: "center" }}>
+          <FlatList
+            data={judul}
+            keyExtractor={(item) => {
+              return item.judul;
+            }}
+            renderItem={({ item }) => (
+              <View style={{ justifyContent: "center" }}>
+                <TouchableOpacity style={styles.dropdownSearch}>
+                  <Text>{item.judul}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
+      )}
+      <View>
+        <Text style={styles.txtKategori}>Buku-Buku Terbaru</Text>
+        <TouchableOpacity style={styles.TouchLihat} onPress={navigateTerbaru}>
+          <Text style={{ color: "blue" }}>Lihat semua</Text>
+        </TouchableOpacity>
+      </View>
       <View style={{ height: hp("40%") }}>
         <FlatList
           showsHorizontalScrollIndicator={false}
@@ -272,7 +297,7 @@ const styles = StyleSheet.create({
   TouchLihat: {
     position: "absolute",
     right: 30,
-    marginTop: 60,
+    marginTop: 15,
   },
   container: {
     backgroundColor: "#fff",
@@ -325,5 +350,26 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 1,
+  },
+  emptyListStyle: {
+    fontSize: 18,
+    textAlign: "center",
+    marginVertical: 350,
+  },
+  dropdownSearch: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 20,
+    margin: 5,
+    marginHorizontal: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    width: wp("90%"),
   },
 });

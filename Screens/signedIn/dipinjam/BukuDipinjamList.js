@@ -10,7 +10,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { db } from "../../../Firebase/firebase-config";
 import {
-  getDocs,
   orderBy,
   where,
   query,
@@ -57,7 +56,6 @@ const BukuDipinjamList = ({ navigation, route }) => {
         });
         setBuku(buku);
       });
-      // const querySnapshot = await getDocs(q);
     }
     fetchBukuTerbaru();
   }, []);

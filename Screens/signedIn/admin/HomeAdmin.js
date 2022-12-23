@@ -5,7 +5,9 @@ import {
   query,
   orderBy,
   onSnapshot,
-  where,
+  startAt,
+  endAt,
+  getDocs,
 } from "firebase/firestore";
 import {
   StyleSheet,
@@ -14,6 +16,7 @@ import {
   FlatList,
   Pressable,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import {
   widthPercentageToDP as wp,
@@ -23,7 +26,32 @@ import SearchBar from "react-native-dynamic-search-bar";
 
 const HomeAdmin = ({ navigation }) => {
   const [buku, setBuku] = useState([]);
-  const [search, setSearch] = useState("");
+  const [judul, setJudul] = useState([]);
+  const [searchInput, setSearchInput] = useState();
+  const [searching, setSearching] = useState(false);
+
+  function onClearPress() {
+    setSearchInput("");
+    setSearching(false);
+  }
+
+  async function onSearch() {
+    setSearching(true);
+    const q = query(
+      collection(db, "buku"),
+      orderBy("judul"),
+      startAt(searchInput),
+      endAt(searchInput + "\uf8ff")
+    );
+    const bukuJudul = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const { judul } = doc.data();
+      bukuJudul.push({ judul });
+      console.log(judul);
+    });
+    setJudul(bukuJudul);
+  }
 
   useEffect(() => {
     async function getBuku() {
@@ -72,13 +100,31 @@ const HomeAdmin = ({ navigation }) => {
         iconColor="#c6c6c6"
         shadowColor="#282828"
         cancelIconColor="#c6c6c6"
-        placeholder="Cari disini..."
-        onChangeText={(text) => setSearch(text)}
-        onSearchPress={() => console.log("Search Icon is pressed")}
-        onPress={() => alert("onPress")}
-        shadowStyle={styles.searchBarShadow}
+        placeholder="Cari judul buku disini..."
+        onChangeText={(text) => setSearchInput(text)}
+        onSearchPress={onSearch}
+        onClearPress={onClearPress}
+        textInputStyle={{ height: 35 }}
+        clearIconImageStyle={{ height: 20, width: 40 }}
+        onSubmitEditing={onSearch}
       />
-      <View></View>
+      {searching && (
+        <View style={{ alignItems: "center" }}>
+          <FlatList
+            data={judul}
+            keyExtractor={(item) => {
+              return item.judul;
+            }}
+            renderItem={({ item }) => (
+              <View style={{ justifyContent: "center" }}>
+                <TouchableOpacity style={styles.dropdownSearch}>
+                  <Text>{item.judul}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>
+      )}
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => {
@@ -155,5 +201,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
 
     elevation: 6,
+  },
+  dropdownSearch: {
+    backgroundColor: "#fff",
+    padding: 15,
+    borderRadius: 20,
+    margin: 5,
+    marginHorizontal: 5,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    width: wp("90%"),
   },
 });
