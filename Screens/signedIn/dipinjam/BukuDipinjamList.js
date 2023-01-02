@@ -3,7 +3,6 @@ import {
   Text,
   View,
   FlatList,
-  Dimensions,
   Image,
   TouchableOpacity,
 } from "react-native";

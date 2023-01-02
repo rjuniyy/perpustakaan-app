@@ -1,16 +1,9 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  TextBase,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { TextInput } from "react-native-paper";
 import FormError from "../Components/FormError";
 import FormSuccess from "../Components/FormSuccess";
-import { getAuth, updatePassword, sendPasswordResetEmail } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const LupaPassword = () => {
   const [errMessage, setErrMessage] = useState("");
@@ -25,11 +18,7 @@ const LupaPassword = () => {
       .then(() => {
         alert("Password reset email telah dikirimkan!");
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
+      .catch((error) => {});
   }
 
   return (

@@ -7,21 +7,13 @@ import {
   Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-  query,
-  where,
-  getDocs,
-  collectionGroup,
-  collection,
-  onSnapshot,
-} from "firebase/firestore";
+import { query, where, collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../../Firebase/firebase-config";
 import { firebase } from "../../../Firebase/firebase";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import moment from "moment/moment";
 
 const BukuDipinjamUser = ({ navigation }) => {
   const [buku, setBuku] = useState([]);

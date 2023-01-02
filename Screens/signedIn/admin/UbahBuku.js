@@ -2,11 +2,8 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   TextInput,
-  ActionSheetIOS,
   Image,
-  ImageBase,
   TouchableOpacity,
 } from "react-native";
 import React, { Component } from "react";
@@ -15,7 +12,6 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import { FontAwesome5 } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import uuid from "uuid";
@@ -23,8 +19,6 @@ import * as Yup from "yup";
 import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../Firebase/firebase-config";
 import AnimatedInput from "react-native-animated-input";
-import { useNavigation } from "@react-navigation/native";
-// import Input from "react-native-input-style";
 
 const uploadBookSchema = Yup.object().shape({
   judul: Yup.string().required("Judul belum diisi"),

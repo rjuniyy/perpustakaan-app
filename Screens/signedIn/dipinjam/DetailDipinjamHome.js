@@ -1,15 +1,5 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { collection, query } from "firebase/firestore";
-import { db } from "../../../Firebase/firebase-config";
+import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import React, { useState } from "react";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

@@ -2,12 +2,11 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
   Image,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

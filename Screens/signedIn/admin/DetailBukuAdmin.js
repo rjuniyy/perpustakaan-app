@@ -9,14 +9,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../../Firebase/firebase-config";
 import uuid from "uuid";
 import { SelectList } from "react-native-dropdown-select-list";

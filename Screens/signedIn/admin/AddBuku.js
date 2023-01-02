@@ -2,11 +2,7 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
-  // TextInput,
-  ActionSheetIOS,
   Image,
-  ImageBase,
   TouchableOpacity,
   ScrollView,
 } from "react-native";

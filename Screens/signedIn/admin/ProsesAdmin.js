@@ -11,21 +11,22 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import {
-  collection,
-  collectionGroup,
-  getDocs,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collectionGroup, onSnapshot, query } from "firebase/firestore";
 import { db } from "../../../Firebase/firebase-config";
 import { firebase } from "../../../Firebase/firebase";
-import { FontAwesome5 } from "@expo/vector-icons";
 
 const ProsesAdmin = ({ navigation, route }) => {
   const [buku, setBuku] = useState([]);
   const userID = firebase.auth().currentUser.uid;
+
+  const EmptyListMessage = ({ item }) => {
+    return (
+      // Flat List Item
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyListStyle}>Belum ada buku yang diproses.</Text>
+      </View>
+    );
+  };
 
   useEffect(() => {
     async function getBuku() {
@@ -77,6 +78,7 @@ const ProsesAdmin = ({ navigation, route }) => {
     <View style={{ height: hp("100%"), flexDirection: "row" }}>
       <FlatList
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={EmptyListMessage}
         style={{ height: hp("100%`"), marginRight: 3 }}
         data={buku}
         keyExtractor={(item, index) => {
@@ -171,5 +173,10 @@ const styles = StyleSheet.create({
   itemstatus: {
     color: "grey",
     fontSize: 13,
+  },
+  emptyListStyle: {
+    fontSize: 18,
+    textAlign: "center",
+    marginVertical: 350,
   },
 });

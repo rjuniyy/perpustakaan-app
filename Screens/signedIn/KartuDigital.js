@@ -3,21 +3,11 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
-  Dimensions,
   FlatList,
 } from "react-native";
 import { firebase } from "../../Firebase/firebase";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  limit,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../Firebase/firebase-config";
 import React, { useEffect, useState } from "react";
 import Barcode from "@kichiyaki/react-native-barcode-generator";

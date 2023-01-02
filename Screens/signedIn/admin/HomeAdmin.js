@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: hp("100%"),
     width: wp("100%"),
-    marginTop: 50,
   },
   card: {
     flex: 1,

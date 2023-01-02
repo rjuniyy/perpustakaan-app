@@ -55,9 +55,28 @@ const Home = ({ navigation }) => {
     const bukuJudul = [];
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      const { judul } = doc.data();
-      bukuJudul.push({ judul });
-      console.log(judul);
+      const {
+        judul,
+        pengarang,
+        status,
+        gambar,
+        penerbit,
+        deskripsi,
+        halaman,
+        isbn,
+        tglTerbit,
+      } = doc.data();
+      bukuJudul.push({
+        judul,
+        pengarang,
+        status,
+        gambar,
+        penerbit,
+        deskripsi,
+        halaman,
+        isbn,
+        tglTerbit,
+      });
     });
     setJudul(bukuJudul);
   }
@@ -164,7 +183,10 @@ const Home = ({ navigation }) => {
             }}
             renderItem={({ item }) => (
               <View style={{ justifyContent: "center" }}>
-                <TouchableOpacity style={styles.dropdownSearch}>
+                <TouchableOpacity
+                  style={styles.dropdownSearch}
+                  onPress={() => navigation.navigate("details", { data: item })}
+                >
                   <Text>{item.judul}</Text>
                 </TouchableOpacity>
               </View>
@@ -286,7 +308,6 @@ const styles = StyleSheet.create({
   Container: {
     height: hp("100%"),
     width: wp("100%"),
-    marginTop: 40,
   },
   txtKategori: {
     fontSize: 18,

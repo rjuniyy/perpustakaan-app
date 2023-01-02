@@ -2,14 +2,7 @@ import { FlatList, StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import {
-  collection,
-  doc,
-  getDocs,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../../Firebase/firebase-config";
 import {
   widthPercentageToDP as wp,

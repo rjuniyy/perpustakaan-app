@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  Button,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState } from "react";
 import { getAuth, updateEmail, updateProfile } from "firebase/auth";
 import uuid from "uuid";
