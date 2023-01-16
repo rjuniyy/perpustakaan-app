@@ -59,9 +59,9 @@ const EditProfile = ({ navigation, route }) => {
   const input = useInput(new Date());
   const [visible, setVisible] = useState(false);
 
-  const showDialog = () => {
-    setVisible(true);
-  };
+  // const showDialog = () => {
+  //   setVisible(true);
+  // };
 
   const handleCancel = () => {
     setVisible(false);
@@ -247,7 +247,7 @@ const EditProfile = ({ navigation, route }) => {
             insetType="middle"
           />
         </View>
-        <TouchableOpacity style={styles.button} onPress={showDialog}>
+        <TouchableOpacity style={styles.button} onPress={update}>
           <Text style={styles.buttonText}>Simpan Perubahan</Text>
         </TouchableOpacity>
       </View>
